@@ -1,0 +1,130 @@
+name: Devin review
+
+on:
+  workflow_dispatch:
+    inputs:
+      prompt:
+        description: Prompt for the Devin session. Used as-is when set.
+        required: false
+        type: string
+      max_acu:
+        description: Maximum ACU limit (positive integer)
+        required: false
+        default: "2"
+        type: string
+# Manual runs only. pull_request_target was removed: it exposes repository
+# secrets to workflows triggered from pull requests.
+permissions:
+  pull-requests: write
+  issues: write
+  contents: read
+
+jobs:
+  review:
+    if: ${{ github.event.sender.login == github.repository_owner }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Request Devin review
+        env:
+          DEVIN_API_KEY: ${{ secrets.DEVIN_API_KEY }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PROMPT_INPUT: ${{ inputs.prompt }}
+          MAX_ACU_INPUT: ${{ inputs.max_acu }}
+        run: |
+          set -euo pipefail
+
+          comment_and_clear_label() {
+            if [ -z "${PR_NUMBER:-}" ]; then
+              return 0
+            fi
+            if ! [[ "$PR_NUMBER" =~ ^[0-9]+$ ]]; then
+              echo "::error::Pull request number was not numeric."
+              exit 1
+            fi
+            comment_file=$(mktemp)
+            printf '%s\n' "$1" > "$comment_file"
+            gh pr comment "$PR_NUMBER" --repo "$REPO" --body-file "$comment_file"
+            rm -f "$comment_file"
+            gh pr edit "$PR_NUMBER" --repo "$REPO" --remove-label "devin"
+          }
+
+          if [ -z "${DEVIN_API_KEY:-}" ]; then
+            echo "::warning::DEVIN_API_KEY is not set. Devin review was not started."
+            comment_and_clear_label "Devin review was not started because the repository secret DEVIN_API_KEY is not set."
+            exit 0
+          fi
+
+          max_acu="${MAX_ACU_INPUT:-}"
+          if [ -z "$max_acu" ]; then
+            max_acu=2
+          fi
+          if ! [[ "$max_acu" =~ ^[1-9][0-9]*$ ]]; then
+            echo "::error::max_acu must be a positive integer."
+            exit 1
+          fi
+
+          if [ -z "${PROMPT_INPUT:-}" ] && [ -z "${PR_URL:-}" ]; then
+            echo "::error::prompt is required when no pull request URL is available."
+            exit 1
+          fi
+
+          payload=$(jq -n \
+            --arg pr_url "${PR_URL:-}" \
+            --arg prompt_input "${PROMPT_INPUT:-}" \
+            --argjson max_acu_limit "$max_acu" \
+            '{
+              prompt: (
+                if ($prompt_input | length) > 0 then $prompt_input
+                else "review PR \($pr_url) for bugs/security, comment findings, do NOT push or merge."
+                end
+              ),
+              max_acu_limit: $max_acu_limit,
+              idempotent: true,
+              unlisted: true
+            }')
+
+          response_file=$(mktemp)
+          trap 'rm -f "$response_file"' EXIT
+          if ! http_code=$(curl -sS -o "$response_file" -w "%{http_code}" \
+            -X POST "https://api.devin.ai/v1/sessions" \
+            -H "Authorization: Bearer ${DEVIN_API_KEY}" \
+            -H "Content-Type: application/json" \
+            -H "Accept: application/json" \
+            --data-binary "$payload"); then
+            echo "::error::Could not reach the Devin API."
+            exit 1
+          fi
+          if ! [[ "$http_code" =~ ^[0-9]{3}$ ]] || [ "$http_code" -lt 200 ] || [ "$http_code" -ge 300 ]; then
+            echo "::error::Devin API returned HTTP ${http_code}."
+            jq -r '.detail // .message // "request failed"' "$response_file" >&2 || true
+            exit 1
+          fi
+
+          if ! jq -e . "$response_file" >/dev/null; then
+            echo "::error::Devin API returned a response that was not valid JSON."
+            exit 1
+          fi
+          session_url=$(jq -r '.url // empty' "$response_file")
+          case "$session_url" in
+            https://*) ;;
+            *)
+              echo "::error::Devin API response did not include an https session URL."
+              exit 1
+              ;;
+          esac
+          case "$session_url" in
+            *[[:space:]]*)
+              echo "::error::Devin API response did not include an https session URL."
+              exit 1
+              ;;
+          esac
+
+          if [ -n "${PR_NUMBER:-}" ]; then
+            comment_and_clear_label "Devin review session: ${session_url}"
+          else
+            printf 'Devin session: %s\n' "$session_url"
+          fi

@@ -1,0 +1,20 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+language: "sv-SE"
+reviews:
+  profile: "chill"
+  request_changes_workflow: false
+  poem: false
+  path_filters:
+    - "!package-lock.json"
+    - "!pnpm-lock.yaml"
+    - "!yarn.lock"
+    - "!bun.lockb"
+    - "!**/*.lock"
+  auto_review:
+    enabled: true
+    # Skip draft pull requests. base_branches is additive with the default
+    # branch; the default branch is main, and this pattern is anchored so
+    # automatic reviews stay on main.
+    drafts: false
+    base_branches:
+      - "^main$"
