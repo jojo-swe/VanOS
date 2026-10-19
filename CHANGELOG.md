@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Fixed
+
+- `GET /api/dashboard` stays up when the data disk is full. A filesystem write that fails with `ENOSPC`, `EDQUOT`, `EROFS`, `EACCES`, or another write error is logged once (the error code only) and does not crash the process. Reads keep serving the last good data with `degraded: true` and `reason` set to that code. If nothing can be served, the route answers `503` `{ "status": "degraded", "reason" }`.
+
 ### Security
 
 - `agents-backup/` is no longer in the repo. The backup script still keeps a local copy of each agent workspace there, but the folder is gitignored and `scripts/privacy-guard.sh` blocks it. The guard now also blocks `SOUL.md`, `USER.md`, `MEMORY.md` and `memory/` at any depth, not only at the root.

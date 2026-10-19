@@ -165,6 +165,13 @@ export interface ConnectionsSummary {
 
 export interface DashboardData {
   generatedAt: string;
+  /**
+   * Set when a filesystem write failed and this body is still being served.
+   * Absent while storage is healthy.
+   */
+  degraded?: boolean;
+  /** Errno of that write, such as ENOSPC. Present only with `degraded`. */
+  reason?: string;
   /** Exchange rates for converting amounts into the viewer's currency. */
   fx: FxRates;
   mode: "almost-free" | "expensive";

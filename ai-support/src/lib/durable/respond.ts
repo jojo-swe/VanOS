@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { noteFsWriteError } from "./fs";
 import { isDurableWriteError } from "./store";
 
 /**
@@ -12,16 +13,21 @@ export function withDurableErrors<A extends unknown[]>(
     try {
       return await handler(req, ...args);
     } catch (err) {
-      if (!isDurableWriteError(err)) throw err;
-      console.error(
-        JSON.stringify({
-          ts: new Date().toISOString(),
-          level: "error",
-          event: "durable_write_failed",
-          path: new URL(req.url).pathname,
-          detail: err.message,
-        }),
-      );
+      const fsCode = noteFsWriteError(err);
+      if (!isDurableWriteError(err) && !fsCode) throw err;
+      // Filesystem codes are logged once, with the code only. Other durable
+      // failures (Upstash) still log the safe message we wrote ourselves.
+      if (!fsCode && isDurableWriteError(err)) {
+        console.error(
+          JSON.stringify({
+            ts: new Date().toISOString(),
+            level: "error",
+            event: "durable_write_failed",
+            path: new URL(req.url).pathname,
+            detail: err.message,
+          }),
+        );
+      }
       return NextResponse.json(
         { error: "Storage is unavailable, so nothing was saved. Try again shortly." },
         { status: 503, headers: { "Retry-After": "5" } },
@@ -40,16 +46,19 @@ export async function bestEffortWrite(label: string, write: () => Promise<unknow
     await write();
     return true;
   } catch (err) {
-    if (!isDurableWriteError(err)) throw err;
-    console.error(
-      JSON.stringify({
-        ts: new Date().toISOString(),
-        level: "error",
-        event: "durable_write_failed",
-        label,
-        detail: err.message,
-      }),
-    );
+    const fsCode = noteFsWriteError(err);
+    if (!isDurableWriteError(err) && !fsCode) throw err;
+    if (!fsCode && isDurableWriteError(err)) {
+      console.error(
+        JSON.stringify({
+          ts: new Date().toISOString(),
+          level: "error",
+          event: "durable_write_failed",
+          label,
+          detail: err.message,
+        }),
+      );
+    }
     return false;
   }
 }

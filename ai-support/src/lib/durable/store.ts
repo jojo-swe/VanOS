@@ -1,6 +1,6 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { isDemoMode } from "@/lib/security/config";
+import { clearFsWriteFailure, fsOps, fsWriteCode, noteFsWriteError } from "./fs";
 import { storePrefix, upstashCommand, upstashConfigured } from "./upstash";
 
 export type DurableBackend = "memory+file" | "upstash";
@@ -38,9 +38,13 @@ export function getDurableBackend(): DurableBackend {
  * memory.
  */
 export class DurableWriteError extends Error {
-  constructor(message: string, options?: { cause?: unknown }) {
-    super(message, options);
+  /** Errno when the failure was a filesystem write. Absent for Upstash. */
+  readonly code?: string;
+
+  constructor(message: string, options?: { cause?: unknown; code?: string }) {
+    super(message, options?.cause !== undefined ? { cause: options.cause } : undefined);
     this.name = "DurableWriteError";
+    if (options?.code) this.code = options.code;
   }
 }
 
@@ -114,7 +118,7 @@ export async function durableReadJson<T>(
   }
   let raw: string;
   try {
-    raw = await readFile(filePath(key), "utf8");
+    raw = await fsOps.readFile(filePath(key), "utf8");
   } catch (e) {
     if ((e as NodeJS.ErrnoException | null)?.code === "ENOENT") return { ok: true, value: null };
     return { ok: false };
@@ -151,15 +155,43 @@ return 1
 
 const CAS_ATTEMPTS = 8;
 
-async function writeLocalFile(key: string, raw: string): Promise<void> {
+const PERSIST_FAILED =
+  "Could not persist data: no Upstash configured and the data directory is not writable. Set UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN.";
+
+/** Unique temp names inside this process. No Node crypto: the store is also imported by the edge proxy. */
+let tempSeq = 0;
+
+/** Drop a temp file. A missing temp is fine: the write may have failed before creating it. */
+async function discardTemp(tmp: string): Promise<void> {
   try {
-    await mkdir(dataDir(), { recursive: true });
-    await writeFile(filePath(key), raw, "utf8");
+    await fsOps.rm(tmp, { force: true });
+  } catch (err) {
+    if (fsWriteCode(err) === "ENOENT") return;
+    noteFsWriteError(err);
+  }
+}
+
+/**
+ * Write `raw` without truncating the previous file. The new bytes go to a
+ * temp file and replace the destination only after that write succeeds, so
+ * a full disk leaves the last good document readable.
+ */
+async function writeLocalFile(key: string, raw: string): Promise<void> {
+  const dest = filePath(key);
+  tempSeq = (tempSeq + 1) % 1_000_000;
+  const tmp = path.join(
+    path.dirname(dest),
+    `.${path.basename(dest)}.${Date.now().toString(36)}.${tempSeq.toString(36)}.tmp`,
+  );
+  try {
+    await fsOps.mkdir(dataDir(), { recursive: true });
+    await fsOps.writeFile(tmp, raw, "utf8");
+    await fsOps.rename(tmp, dest);
+    clearFsWriteFailure();
   } catch (e) {
-    throw new DurableWriteError(
-      "Could not persist data: no Upstash configured and the data directory is not writable. Set UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN.",
-      { cause: e },
-    );
+    await discardTemp(tmp);
+    const code = noteFsWriteError(e) ?? undefined;
+    throw new DurableWriteError(PERSIST_FAILED, { cause: e, code });
   }
 }
 
@@ -270,7 +302,7 @@ async function readLocal<T>(key: string, ns: string): Promise<T | null> {
     }
   }
   try {
-    const raw = await readFile(filePath(key), "utf8");
+    const raw = await fsOps.readFile(filePath(key), "utf8");
     cache().set(ns, raw);
     return JSON.parse(raw) as T;
   } catch {
@@ -308,17 +340,18 @@ export async function durablePing(): Promise<{
     }
   }
   try {
-    await mkdir(dataDir(), { recursive: true });
+    await fsOps.mkdir(dataDir(), { recursive: true });
     return {
       backend,
       ok: true,
       detail: `Local dir ${dataDir()}`,
     };
   } catch (e) {
+    const code = noteFsWriteError(e);
     return {
       backend,
       ok: false,
-      detail: e instanceof Error ? e.message : "Local FS unavailable",
+      detail: code ?? "Local FS unavailable",
     };
   }
 }

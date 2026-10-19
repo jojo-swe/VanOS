@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server";
 import { getDashboardData } from "@/lib/dashboard/data";
+import { serveDashboard } from "@/lib/dashboard/serve";
 import { denyDashboardRead } from "@/lib/security/dashboard-auth";
 import { denyIfEdgeClosed } from "@/lib/security/edge-deny";
 
@@ -10,5 +10,5 @@ export async function GET(req: Request) {
   if (edgeDenied) return edgeDenied;
   const unauthorized = denyDashboardRead(req);
   if (unauthorized) return unauthorized;
-  return NextResponse.json(await getDashboardData());
+  return serveDashboard(() => getDashboardData());
 }

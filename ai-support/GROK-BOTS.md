@@ -13,6 +13,8 @@ Cursor **Grok Bot** has no public chat API. Mission Control talks to it through
 | `GET`  | `/api/bots/status` | Targets, recent dispatches/ingests, setup prompt |
 | `GET`  | `/api/dashboard` | Snapshot with live Bot overlays merged in |
 
+A full disk does not turn that snapshot into a 500. When a local write fails, the route still returns the latest readable data with `degraded: true` and `reason` set to the error code (`ENOSPC`, `EDQUOT`, `EROFS`, `EACCES`, or another write errno). If nothing can be served, it answers `503` `{ "status": "degraded", "reason" }`.
+
 ## Setup (5 minutes)
 
 1. Open Grok Bot → create a Bot (e.g. **Muddy**).
