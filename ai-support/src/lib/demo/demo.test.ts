@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { mkdtemp, readdir, rm } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
@@ -360,22 +361,27 @@ describe("demo mode", { concurrency: false }, () => {
       "../../components/dashboard/ConnectionsPanel.tsx",
     ].map((rel) => readFileSync(fileURLToPath(new URL(rel, import.meta.url)), "utf8"));
     const blob = JSON.stringify({ money, connections, dashboard, banner: demoBanner() }) + sources.join("\n");
-    const personal = [
-      /adhd/i,
-      /\bfriends\b/i,
-      /vänner/i,
-      /\bcrisis\b/i,
-      /\bkris\b/i,
-      /12[\s,]?000/,
-      /\bgpu\b/i,
-      /spotify/i,
-      /netflix/i,
-      /icloud/i,
-      /\bjojo\b/i,
-      /jojo-swe\/ai-support/i,
-    ];
-    for (const pattern of personal) {
-      assert.equal(pattern.test(blob), false, pattern.source);
-    }
+    // Terms are stored as SHA-256 hashes so the public repo holds no plain keywords.
+    // Digit groups are joined first, so "12 000" and "12,000" match the "12000" hash.
+    const normalized = blob.replace(/(\d)[\s,](?=\d{3}\b)/g, "$1");
+    const tokens = normalized.toLowerCase().split(/[^\p{L}\p{N}]+/u);
+    const forbidden = new Set([
+      "f3f93a385e23b9b1cf3dc433529a797bdaa668843309813f5269fef54208620f",
+      "2e4b9cc2428beb7bff6a56c14d7304e472a23e890e91ef0a6b0b0380e89f9734",
+      "3e7bc7259b62ec82a7b3b2797504753ab0268a4cebf71f05844b43998c5a663f",
+      "34d6231c09aa82a5a446412b2372c9f972055548f835478e6625ca16f44c3944",
+      "d999056550fd648de6de0537f389c3da467f846a4fd6117a62cb54ba1c23cf3c",
+      "d43677630f51d3047ba59914b280fe12aa34bd77a61e7e32e546bff276684898",
+      "e3c5ba51dba85ab0c990db5e309f4d7bdb282470fb02aee75b9022c1399e91c8",
+      "2b78da3dc866654e6ea7cb2f654df44746b6f02876acbb2a05726ab3d915e47e",
+      "13ed070478ef62c3a7baa36c8d042a9d1cdc0fcbb2af93a795f2ad20ad6e9cb5",
+      "e0aa81dd500c530a70b5511fc95959ae1e19dc19a01034e223bfc5ed78e3bdef",
+      "54af2a2960e582263c45971cdd40da4ae31ede1db5395629d910f056479de12d",
+      "9d3eaca3c5d4cadfd02127c0338f26f8aff1a4a59ff6aa1bc0d28b3c513b2ee3",
+      "f3ceec9a1cced1c2c2702729b826acdd8c8269e4459604fdf9e99ca39f471342",
+      "c5d1866aabc15dda07995e73b08c4ccb514947dcd3a621cea851af5fe366f11b",
+    ]);
+    const leaked = tokens.filter((t) => forbidden.has(createHash("sha256").update(t).digest("hex")));
+    assert.deepEqual(leaked, [], "demo data contains a personal keyword");
   });
 });

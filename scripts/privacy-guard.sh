@@ -27,14 +27,20 @@ while IFS= read -r f; do
   esac
 done < <(git ls-files)
 
-pattern='adhd|kreditkris|credit crisis|\bkris\b|few friends|få vänner|12[ ,.]?000 ?(kr|sek)|johnjohansson81'
-hits=$(git ls-files -z \
-  | grep -zv -E '^(ai-support/src/lib/demo/fixture\.ts|ai-support/src/lib/demo/demo\.test\.ts|scripts/privacy-guard\.sh|\.github/workflows/privacy-guard\.yml)$' \
-  | xargs -0 -r grep -I -n -i -E "$pattern" -- 2>/dev/null | cut -d: -f1,2 || true)
-if [ -n "$hits" ]; then
-  echo "Personal keywords found (file:line, text not shown):"
-  echo "$hits" | while IFS= read -r h; do echo "::error file=${h%%:*},line=${h#*:}::Personal keyword"; done
-  fail=1
+# The keyword list is not in this repo. It comes from the PRIVACY_KEYWORDS secret
+# (an extended regex). Without it the keyword scan is skipped and the file scan still runs.
+pattern="${PRIVACY_KEYWORDS:-}"
+if [ -z "$pattern" ]; then
+  echo "PRIVACY_KEYWORDS is not set: keyword scan skipped."
+else
+  hits=$(git ls-files -z \
+    | grep -zv -E '^(scripts/privacy-guard\.sh|\.github/workflows/privacy-guard\.yml)$' \
+    | xargs -0 -r grep -I -n -i -E "$pattern" -- 2>/dev/null | cut -d: -f1,2 || true)
+  if [ -n "$hits" ]; then
+    echo "Personal keywords found (file:line, text not shown):"
+    echo "$hits" | while IFS= read -r h; do echo "::error file=${h%%:*},line=${h#*:}::Personal keyword"; done
+    fail=1
+  fi
 fi
 
 if [ "$fail" -ne 0 ]; then
