@@ -1,0 +1,30 @@
+title = "VanOS gitleaks config"
+
+[extend]
+useDefault = true
+
+# Singular [allowlist] cannot sit next to [[allowlists]].
+[[allowlists]]
+description = "Build output and installed dependencies are not source"
+paths = [
+  '''(?:^|/)node_modules/''',
+  '''(?:^|/)ai-support/\.next/''',
+  '''(?:^|/)\.next/''',
+]
+
+# Path and regex must both match, and only for generic-api-key.
+# This stays on the rule, not a global [[allowlists]] paths entry: gitleaks
+# 8.28 skips a file during enumeration when any global allowlist path matches,
+# even with condition = "AND", which would hide a real secret in the test.
+# Rule allowlists are applied per finding after the file is read.
+[[rules]]
+id = "generic-api-key"
+[[rules.allowlists]]
+description = "RFC 6238 appendix B TOTP test vector in the TOTP unit tests only"
+condition = "AND"
+paths = [
+  '''(?:^|/)ai-support/src/lib/security/(?:totp|auth-hardening)\.test\.ts$''',
+]
+regexes = [
+  '''^(?:GEZDGNBVGY3TQOJQ){2,3}$''',
+]

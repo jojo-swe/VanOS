@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="VanOS">
+  <title>VanOS</title>
+  <style>
+    @media (prefers-color-scheme: dark) {
+      .tile { fill: #101614; }
+      .ink { fill: #e7f1ec; }
+      .hole { fill: #101614; }
+      .accent { fill: #e8925a; }
+    }
+  </style>
+  <rect class="tile" width="64" height="64" rx="14" fill="#eef3f1"/>
+  <path class="ink" fill="#14201c" d="M9 44L9 24L14 17L34 17L44 27L55 29.5L55 44Z"/>
+  <path class="hole" fill="#eef3f1" d="M33.2 18.8L42.4 26.6L33.2 26.6Z"/>
+  <rect class="accent" fill="#c45c26" x="15.5" y="23.2" width="14.5" height="9.2" rx="1.6"/>
+  <rect class="hole" fill="#eef3f1" x="17.6" y="27.4" width="2.05" height="3.5" rx="0.4"/>
+  <rect class="hole" fill="#eef3f1" x="21.2" y="25.4" width="2.05" height="5.5" rx="0.4"/>
+  <rect class="hole" fill="#eef3f1" x="24.8" y="26.5" width="2.05" height="4.4" rx="0.4"/>
+  <circle class="accent" fill="#c45c26" cx="28.5" cy="15.1" r="2.15"/>
+  <circle class="hole" fill="#eef3f1" cx="21.5" cy="44" r="6.3"/>
+  <circle class="hole" fill="#eef3f1" cx="43.5" cy="44" r="6.3"/>
+  <circle class="accent" fill="#c45c26" cx="21.5" cy="44" r="2.35"/>
+  <circle class="accent" fill="#c45c26" cx="43.5" cy="44" r="2.35"/>
+</svg>

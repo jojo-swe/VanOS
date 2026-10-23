@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VanOS - Your Personal AI Operating System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; }
+        .hero { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 80px 20px; text-align: center; }
+        .hero h1 { font-size: 3rem; margin-bottom: 20px; }
+        .hero p { font-size: 1.3rem; opacity: 0.9; max-width: 600px; margin: 0 auto 30px; }
+        .btn { display: inline-block; padding: 15px 40px; background: white; color: #667eea; text-decoration: none; border-radius: 50px; font-weight: bold; margin: 10px; transition: transform 0.3s; }
+        .btn:hover { transform: scale(1.05); }
+        .btn-primary { background: #ff6b6b; color: white; }
+        .features { padding: 60px 20px; max-width: 1000px; margin: 0 auto; }
+        .features h2 { text-align: center; margin-bottom: 40px; font-size: 2rem; }
+        .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
+        .feature { padding: 30px; border-radius: 10px; background: #f8f9fa; text-align: center; }
+        .feature h3 { color: #667eea; margin-bottom: 15px; }
+        .pricing { background: #f8f9fa; padding: 60px 20px; text-align: center; }
+        .pricing h2 { margin-bottom: 40px; }
+        .price-cards { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; }
+        .price-card { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 300px; }
+        .price-card.featured { border: 3px solid #667eea; transform: scale(1.05); }
+        .price { font-size: 3rem; font-weight: bold; color: #667eea; }
+        .price span { font-size: 1rem; color: #666; }
+        .affiliates { padding: 60px 20px; max-width: 800px; margin: 0 auto; }
+        .affiliate-links { display: grid; gap: 15px; }
+        .affiliate-link { display: block; padding: 20px; background: #f8f9fa; border-radius: 10px; text-decoration: none; color: #333; transition: background 0.3s; }
+        .affiliate-link:hover { background: #e9ecef; }
+        .affiliate-link strong { color: #667eea; }
+        footer { background: #333; color: white; padding: 40px 20px; text-align: center; }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <h1>VanOS</h1>
+        <p>Your personal AI operating system. 24/7 autonomous agent that works while you sleep.</p>
+        <a href="#" class="btn">Get Started Free</a>
+        <a href="#pricing" class="btn btn-primary">Go Premium</a>
+    </section>
+
+    <section class="features">
+        <h2>What VanOS Can Do</h2>
+        <div class="feature-grid">
+            <div class="feature">
+                <h3>🤖 AI Assistant</h3>
+                <p>Smart AI that understands your needs and executes tasks autonomously.</p>
+            </div>
+            <div class="feature">
+                <h3>💰 Revenue Generation</h3>
+                <p>Automated affiliate marketing, freelance hunting, and sales.</p>
+            </div>
+            <div class="feature">
+                <h3>🔄 Automation</h3>
+                <p>Automate repetitive tasks, emails, and workflows.</p>
+            </div>
+            <div class="feature">
+                <h3>📊 Analytics</h3>
+                <p>Track performance, revenue, and growth metrics.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing" id="pricing">
+        <h2>Simple Pricing</h2>
+        <div class="price-cards">
+            <div class="price-card">
+                <h3>Free</h3>
+                <div class="price">$0<span>/mo</span></div>
+                <p>✓ 50 AI messages/day</p>
+                <p>✓ Basic automation</p>
+                <p>✓ Community support</p>
+            </div>
+            <div class="price-card featured">
+                <h3>Pro</h3>
+                <div class="price">$19<span>/mo</span></div>
+                <p>✓ Unlimited AI messages</p>
+                <p>✓ Advanced automation</p>
+                <p>✓ Priority support</p>
+                <p>✓ API access</p>
+                <p>✓ Revenue tools</p>
+            </div>
+            <div class="price-card">
+                <h3>Enterprise</h3>
+                <div class="price">$99<span>/mo</span></div>
+                <p>✓ Everything in Pro</p>
+                <p>✓ Custom agents</p>
+                <p>✓ Dedicated support</p>
+                <p>✓ SLA guarantee</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="affiliates">
+        <h2>Tools We Recommend</h2>
+        <div class="affiliate-links">
+            <a href="https://shopify.com/affilites" class="affiliate-link" target="_blank">
+                <strong>🛒 Shopify Affiliate</strong> - Earn up to $200 per referral
+            </a>
+            <a href="https://www.awin.com/" class="affiliate-link" target="_blank">
+                <strong>📦 Awin</strong> - Global affiliate network
+            </a>
+            <a href="https://www.amazon.com/associates" class="affiliate-link" target="_blank">
+                <strong>📚 Amazon Associates</strong> - Earn from product recommendations
+            </a>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2026 VanOS - Making AI work for you</p>
+    </footer>
+</body>
+</html>

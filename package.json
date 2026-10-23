@@ -1,0 +1,15 @@
+{
+  "name": "vanos",
+  "private": true,
+  "license": "AGPL-3.0-only",
+  "description": "VanOS monorepo — app lives in ai-support/",
+  "scripts": {
+    "dev": "npm run dev --prefix ai-support",
+    "build": "npm run build --prefix ai-support",
+    "start": "npm run start --prefix ai-support",
+    "lint": "npm run lint --prefix ai-support"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1,0 +1,18 @@
+name: Privacy guard
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  privacy-guard:
+    name: privacy-guard
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Block personal files and keywords
+        run: bash scripts/privacy-guard.sh

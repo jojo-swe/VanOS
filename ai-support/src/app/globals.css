@@ -1,0 +1,359 @@
+@import "tailwindcss";
+
+/*
+  Light is the default. `data-theme="dark"` forces the night palette.
+  `data-theme="system"` (the default) follows prefers-color-scheme.
+  The head script sets data-theme from localStorage before first paint.
+  The explicit dark block and the system-dark block must assign the same
+  variables — theme.test.ts checks that.
+*/
+:root {
+  color-scheme: light;
+  --bg-light: #eef3f1;
+  --bg-dark: #101614;
+  --surface-light: #f7faf8;
+  --surface-dark: #1a2420;
+  --ink-light: #14201c;
+  --ink-dark: #e7f1ec;
+  --muted-fg-light: #5c6d66;
+  --muted-fg-dark: #b7c4bc;
+  --line-light: color-mix(in oklab, #14201c 12%, transparent);
+  --line-dark: color-mix(in oklab, #e7f1ec 16%, transparent);
+  --accent-light: #c45c26;
+  --accent-dark: #e8925a;
+  --accent-ink-light: #9a3f12;
+  --accent-ink-dark: #f3c4a4;
+  --accent-soft-light: color-mix(in oklab, #c45c26 16%, white);
+  --accent-soft-dark: color-mix(in oklab, #e8925a 22%, #1a2420);
+  --ok-light: #2f7d5b;
+  --ok-dark: #3dce8e;
+  --ok-ink-light: #1d5a40;
+  --ok-ink-dark: #b8f3d6;
+  --ok-soft-light: color-mix(in oklab, #2f7d5b 16%, white);
+  --ok-soft-dark: color-mix(in oklab, #3dce8e 18%, #1a2420);
+  --warn-light: #c4921a;
+  --warn-dark: #e2b34a;
+  --warn-ink-light: #8a6410;
+  --warn-ink-dark: #f6dd9a;
+  --warn-soft-light: color-mix(in oklab, #c4921a 18%, white);
+  --warn-soft-dark: color-mix(in oklab, #e2b34a 20%, #1a2420);
+  --danger-light: #c23b3b;
+  --danger-dark: #f59b9b;
+  --grid-light: #14201c;
+  --grid-dark: #e7f1ec;
+  --atmo-a-light: #9ec9b8;
+  --atmo-a-dark: #1c3d32;
+  --atmo-b-light: #f0c49a;
+  --atmo-b-dark: #3d2b1c;
+  --atmo-c-light: #e8f0ec;
+  --atmo-c-dark: #121c18;
+  --atmo-d-light: #eef3f1;
+  --atmo-d-dark: #101614;
+  --atmo-e-light: #e6ebe4;
+  --atmo-e-dark: #0c1210;
+  --bg: var(--bg-light);
+  --surface: var(--surface-light);
+  --ink: var(--ink-light);
+  --muted-fg: var(--muted-fg-light);
+  --line: var(--line-light);
+  --accent: var(--accent-light);
+  --accent-ink: var(--accent-ink-light);
+  --accent-soft: var(--accent-soft-light);
+  --ok: var(--ok-light);
+  --ok-ink: var(--ok-ink-light);
+  --ok-soft: var(--ok-soft-light);
+  --warn: var(--warn-light);
+  --warn-ink: var(--warn-ink-light);
+  --warn-soft: var(--warn-soft-light);
+  --danger: var(--danger-light);
+  --grid: var(--grid-light);
+  --atmo-a: var(--atmo-a-light);
+  --atmo-b: var(--atmo-b-light);
+  --atmo-c: var(--atmo-c-light);
+  --atmo-d: var(--atmo-d-light);
+  --atmo-e: var(--atmo-e-light);
+  --background: var(--bg);
+  --foreground: var(--ink);
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: var(--bg-dark);
+  --surface: var(--surface-dark);
+  --ink: var(--ink-dark);
+  --muted-fg: var(--muted-fg-dark);
+  --line: var(--line-dark);
+  --accent: var(--accent-dark);
+  --accent-ink: var(--accent-ink-dark);
+  --accent-soft: var(--accent-soft-dark);
+  --ok: var(--ok-dark);
+  --ok-ink: var(--ok-ink-dark);
+  --ok-soft: var(--ok-soft-dark);
+  --warn: var(--warn-dark);
+  --warn-ink: var(--warn-ink-dark);
+  --warn-soft: var(--warn-soft-dark);
+  --danger: var(--danger-dark);
+  --grid: var(--grid-dark);
+  --atmo-a: var(--atmo-a-dark);
+  --atmo-b: var(--atmo-b-dark);
+  --atmo-c: var(--atmo-c-dark);
+  --atmo-d: var(--atmo-d-dark);
+  --atmo-e: var(--atmo-e-dark);
+}
+
+@media (prefers-color-scheme: dark) {
+  html[data-theme="system"] {
+    color-scheme: dark;
+    --bg: var(--bg-dark);
+    --surface: var(--surface-dark);
+    --ink: var(--ink-dark);
+    --muted-fg: var(--muted-fg-dark);
+    --line: var(--line-dark);
+    --accent: var(--accent-dark);
+    --accent-ink: var(--accent-ink-dark);
+    --accent-soft: var(--accent-soft-dark);
+    --ok: var(--ok-dark);
+    --ok-ink: var(--ok-ink-dark);
+    --ok-soft: var(--ok-soft-dark);
+    --warn: var(--warn-dark);
+    --warn-ink: var(--warn-ink-dark);
+    --warn-soft: var(--warn-soft-dark);
+    --danger: var(--danger-dark);
+    --grid: var(--grid-dark);
+    --atmo-a: var(--atmo-a-dark);
+    --atmo-b: var(--atmo-b-dark);
+    --atmo-c: var(--atmo-c-dark);
+    --atmo-d: var(--atmo-d-dark);
+    --atmo-e: var(--atmo-e-dark);
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-body);
+  --font-mono: var(--font-mono);
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body), "Segoe UI", sans-serif;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--muted-fg);
+  opacity: 1;
+}
+
+.dash-shell {
+  isolation: isolate;
+}
+
+.dash-atmosphere {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background:
+    radial-gradient(1200px 600px at 10% -10%, var(--atmo-a) 0%, transparent 55%),
+    radial-gradient(900px 500px at 90% 0%, var(--atmo-b) 0%, transparent 50%),
+    linear-gradient(165deg, var(--atmo-c) 0%, var(--atmo-d) 40%, var(--atmo-e) 100%);
+}
+
+.dash-gridline {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.35;
+  background-image:
+    linear-gradient(color-mix(in oklab, var(--grid) 6%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in oklab, var(--grid) 6%, transparent) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: linear-gradient(to bottom, black 0%, transparent 85%);
+}
+
+.dash-hero {
+  background:
+    linear-gradient(135deg, color-mix(in oklab, #1f4d3f 18%, transparent), transparent 55%),
+    linear-gradient(to right, var(--surface), color-mix(in oklab, #f0c49a 22%, var(--surface)));
+}
+
+.dash-hero-wash {
+  position: absolute;
+  inset: auto -10% -40% 40%;
+  height: 140%;
+  background:
+    radial-gradient(ellipse at center, color-mix(in oklab, #c45c26 22%, transparent), transparent 65%);
+  animation: wash-drift 12s ease-in-out infinite alternate;
+}
+
+.panel {
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  background: color-mix(in oklab, var(--surface) 88%, white);
+  padding: 1.25rem;
+  backdrop-filter: blur(6px);
+}
+
+.metric-tile {
+  animation: rise-in 0.55s ease both;
+}
+
+.agent-card:hover {
+  transform: translateY(-1px);
+}
+
+.vanlife-bar {
+  width: var(--vanlife-pct, 0%);
+  transform-origin: left center;
+  animation: fill-bar 1.2s ease-out both;
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes wash-drift {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(-4%, 3%, 0) scale(1.05);
+  }
+}
+
+@keyframes fill-bar {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .metric-tile,
+  .dash-hero-wash,
+  .vanlife-bar,
+  .agent-card {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Phone drawer. Hidden from md up so the sidebar/header stay as they are. */
+.nav-drawer {
+  margin: 0;
+  height: 100dvh;
+  max-height: 100dvh;
+  width: min(18.75rem, calc(100vw - 2.75rem));
+  max-width: calc(100vw - 2.75rem);
+  border: 0;
+  border-right: 1px solid var(--line);
+  padding: 0;
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 12px 0 40px color-mix(in oklab, #14201c 16%, transparent);
+}
+
+.nav-drawer::backdrop {
+  background: color-mix(in oklab, #14201c 42%, transparent);
+}
+
+@media (width >= 48rem) {
+  .nav-drawer,
+  .nav-drawer::backdrop {
+    display: none !important;
+  }
+}
+
+/* Below md: phone layout. md and up keep the existing desktop/tablet look. */
+@media (width < 48rem) {
+  .dash-shell {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+
+  .dash-shell :where(button, input, select, textarea) {
+    min-height: 2.75rem;
+    min-width: 2.75rem;
+  }
+
+  .dash-shell :where(input, select, textarea) {
+    font-size: 1rem;
+  }
+
+  .dash-shell :where(p, h1, h2, h3, dd, code, pre, td) {
+    overflow-wrap: anywhere;
+  }
+
+  .dash-shell :where(article, li, .panel) {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .data-table-scroll {
+    overflow-x: visible;
+  }
+
+  table.data-table {
+    display: block;
+    min-width: 0 !important;
+    width: 100%;
+  }
+
+  table.data-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  table.data-table tbody {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  table.data-table tr {
+    display: block;
+    border: 1px solid var(--line);
+    border-radius: 0.75rem;
+    padding: 0.75rem 0.875rem;
+    background: color-mix(in oklab, var(--bg) 45%, transparent);
+  }
+
+  table.data-table td {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.15rem;
+    width: auto;
+    padding: 0.45rem 0;
+    border: 0;
+    text-align: left;
+  }
+
+  table.data-table td::before {
+    content: attr(data-label);
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted-fg);
+  }
+}

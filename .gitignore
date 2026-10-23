@@ -1,0 +1,45 @@
+# Secrets. The auto-backup runs `git add -A` over every agent workspace,
+# so anything matching here never reaches the public repo.
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+*.pfx
+id_rsa*
+id_ed25519*
+secrets/
+credentials/
+credentials.json
+*.credentials.json
+service-account*.json
+.github-token
+.npmrc
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Temp
+*.tmp
+*.bak
+
+# Local Claude Code session logs
+.recall/
+
+# Personal files of the main agent workspace. They hold real personal data
+# and must never be committed. Use the *.example.md templates instead.
+# Blocked at any depth, so agent workspaces are covered too.
+SOUL.md
+USER.md
+MEMORY.md
+**/memory/**
+!**/memory/*.example.md
+
+# Local copies of other agents' workspaces. Never committed.
+agents-backup/

@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "vanos": {
+      "command": "npx",
+      "args": ["tsx", "mcp/server.ts"],
+      "cwd": "/ABSOLUTE/PATH/TO/VanOS/ai-support",
+      "env": {
+        "VANOS_API_BASE": "http://127.0.0.1:3000",
+        "AGENT_API_TOKEN": "replace-me"
+      }
+    }
+  }
+}

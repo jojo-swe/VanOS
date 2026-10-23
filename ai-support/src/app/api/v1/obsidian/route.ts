@@ -1,0 +1,22 @@
+import { NextResponse } from "next/server";
+import {
+  authorizeAgent,
+  isAgentApiConfigured,
+  notConfigured,
+  unauthorized,
+} from "@/lib/agent-api/auth";
+import { getObsidianSnapshot } from "@/lib/obsidian/snapshot";
+import { withRequestLog } from "@/lib/security/access-log";
+import { denyIfEdgeClosed } from "@/lib/security/edge-deny";
+
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+
+export const GET = withRequestLog(async function GET(req: Request) {
+  const edgeDenied = denyIfEdgeClosed(new URL(req.url).pathname);
+  if (edgeDenied) return edgeDenied;
+  if (!isAgentApiConfigured()) return notConfigured();
+  if (!authorizeAgent(req)) return unauthorized(req);
+  const query = new URL(req.url).searchParams.get("q");
+  return NextResponse.json(await getObsidianSnapshot(query));
+});
