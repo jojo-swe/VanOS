@@ -1,0 +1,37 @@
+{
+  "name": "ai-support",
+  "version": "0.1.0",
+  "private": true,
+  "license": "AGPL-3.0-only",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "test": "MONEY_FX_AUTO=off tsx --test --test-concurrency=1 src/lib/bots/ingest.route.test.ts src/lib/dashboard/alerts.test.ts src/lib/dashboard/disk-full.test.ts src/lib/board/board.test.ts src/lib/currency/fx.test.ts src/lib/money/fx.test.ts src/components/dashboard/sections.test.ts src/lib/format/time.test.ts src/lib/mcp/mcp.route.test.ts src/lib/security/access.test.ts src/lib/security/access-log.test.ts src/lib/security/remediation.test.ts src/lib/security/totp.test.ts src/lib/durable/durable.test.ts src/lib/http/validation.test.ts src/lib/security/ratelimit.test.ts src/lib/slack/slack.test.ts src/lib/demo/demo.test.ts src/lib/theme/theme.test.ts src/lib/theme/contrast.test.ts src/lib/integrations/http.test.ts src/lib/github/github.test.ts src/lib/notion/notion.test.ts src/lib/obsidian/obsidian.test.ts src/lib/integrations/integrations.route.test.ts src/lib/security/hardening.test.ts src/lib/money/actions.test.ts src/lib/money/action.route.test.ts src/lib/security/auth-hardening.test.ts src/lib/currency/riksbank.test.ts",
+    "totp:setup": "tsx scripts/totp-setup.ts",
+    "mcp": "tsx mcp/server.ts",
+    "smoke:security": "tsx scripts/security-smoke.ts",
+    "check:edge": "tsx scripts/check-edge-build.ts"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.1",
+    "next": "16.4.2",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "qrcode": "^1.5.4",
+    "eslint-config-next": "16.4.2",
+    "tailwindcss": "^4",
+    "tsx": "^4.23.15",
+    "typescript": "^5"
+  }
+}
