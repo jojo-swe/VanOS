@@ -228,3 +228,67 @@ The goal: Be helpful without being annoying. Check in a few times a day, do usef
 ## Make It Yours
 
 This is a starting point. Add your own conventions, style, and rules as you figure out what works.
+
+---
+
+<!-- agents-handover:rules -->
+## Gemensamma agentregler (multi-agent)
+Gemensamma regler för alla AI-agenter (Claude Code, Codex, molnagenter m.fl.) som arbetar i det här repot.
+Flera agenter kan jobba här parallellt – utgå alltid från att någon annan kan ha pågående arbete.
+
+### Innan du börjar
+
+1. **Läs `HANDOVER.md`** – aktuellt läge, pågående arbete, nästa steg och kända problem.
+2. **Kolla läget i git:**
+   ```sh
+   git status
+   git fetch --all --prune
+   git branch -a
+   gh pr list --state open
+   ```
+3. **Gör inte om något som redan pågår.** Finns det en öppen PR, en aktiv branch eller en rad under
+   "Pågående arbete" i `HANDOVER.md` som rör samma sak – bygg vidare på den eller fråga användaren.
+4. Har arbetskatalogen ocommittade ändringar som inte är dina: rör dem inte. Använd en egen
+   `git worktree` eller fråga användaren.
+
+### Under arbetet
+
+- **En branch per uppgift**, namnformat: `agent/<verktyg>/<kort-beskrivning>`
+  (t.ex. `agent/claude/fix-login-timeout`, `agent/codex/add-csv-export`).
+- Registrera ditt arbete under "Pågående arbete" i `HANDOVER.md` tidigt (agent, branch, status).
+- **Committa ofta** med tydliga meddelanden.
+- **Fråga alltid användaren innan destruktiva git-kommandon:** `push --force`, `reset --hard`,
+  `clean -fd`, radera brancher (lokalt eller remote), `rebase` av delade brancher, `checkout -- .`.
+
+### Innan sessionen avslutas
+
+- **Inget arbete får lämnas ocommittat.** Committa (vid behov som WIP) och **pusha alltid** din branch.
+- **Uppdatera `HANDOVER.md`:** aktuellt läge, pågående arbete, nästa steg, kända problem och en ny rad
+  i loggen (datum, agent, vad som gjordes).
+- Om repot saknar `AGENTS.md` eller `HANDOVER.md`: skapa dem från mallen
+  (https://github.com/jojo-swe/repo-template) innan du börjar.
+
+### Repo-specifikt (autodetekterat 2026-11-04)
+
+#### Bygga och testa
+
+- Installera: `npm install`
+- dev: `npm run dev`  (`npm run dev --prefix ai-support`)
+- start: `npm run start`  (`npm run start --prefix ai-support`)
+- build: `npm run build`  (`npm run build --prefix ai-support`)
+- lint: `npm run lint`  (`npm run lint --prefix ai-support`)
+- CI: GitHub Actions (`ci.yml`, `devin.yml`, `privacy-guard.yml`, `secret-scan.yml`)
+
+#### Struktur
+
+- `.github/` (5 filer)
+- `.openclaw/` (1 filer)
+- `ai-support/` (237 filer)
+- `blog/` (1 filer)
+- `docs/` (8 filer)
+- `scripts/` (2 filer)
+- Filer i roten: `.backup-to-github.sh`, `.coderabbit.yaml`, `.gitignore`, `.gitleaks.toml`, `.pre-commit-config.yaml`, `AGENTS.md`, `bind-telegram.sh`, `BOOTSTRAP.md`, `CHANGELOG.md`, `CLAUDE.md`, `HEARTBEAT.md`, `IDENTITY.md`, `LICENSE`, `MEMORY.example.md`, `ORG-CHART.md` …
+
+#### Övrigt
+
+<!-- Konventioner, miljövariabler, deploy, saker agenter ska undvika. -->
