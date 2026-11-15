@@ -1,3 +1,5 @@
+<p align="center"><img src=".github/assets/logo.svg" alt="VanOS logo" width="128"></p>
+
 # 🚐 VanOS
 
 **[Live demo → van-os.vercel.app](https://van-os.vercel.app)**

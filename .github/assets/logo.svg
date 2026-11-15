@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#08090c"/>
+  <defs>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="28" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <circle cx="256" cy="256" r="180" fill="#e8a54b" fill-opacity="0.18" filter="url(#glow)"/>
+  <rect x="56.32" y="56.32" width="399.36" height="399.36" rx="71.88" fill="#0e1016"/>
+  <rect x="63.51" y="63.51" width="384.98" height="384.98" rx="64.70" fill="none" stroke="#e8a54b" stroke-opacity="0.35" stroke-width="3"/>
+    <polygon points="153.79,304.67 153.79,256.00 202.46,197.59 353.34,197.59 353.34,304.67" fill="none" stroke="#e8a54b" stroke-width="13.38" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="202.46" y1="197.59" x2="202.46" y2="304.67" fill="none" stroke="#e8a54b" stroke-width="9.73" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="163.52" y="236.53" width="29.20" height="34.07" rx="6.08" fill="none" stroke="#e8a54b" stroke-width="8.52" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="231.66" y="221.93" width="97.34" height="29.20" rx="7.30" fill="none" stroke="#e8a54b" stroke-width="8.52" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="202.46" cy="309.54" r="21.90" fill="#0e1016" stroke="#e8a54b" stroke-width="12.17" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="314.41" cy="309.54" r="21.90" fill="#0e1016" stroke="#e8a54b" stroke-width="12.17" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="202.46" cy="309.54" r="7.30" fill="#e8a54b" stroke="none"/>
+    <circle cx="314.41" cy="309.54" r="7.30" fill="#e8a54b" stroke="none"/>
+</svg>
