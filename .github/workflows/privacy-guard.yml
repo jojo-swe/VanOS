@@ -20,6 +20,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Block personal files and keywords
+        env:
+          PRIVACY_KEYWORDS: ${{ secrets.PRIVACY_KEYWORDS }}
         run: bash scripts/privacy-guard.sh
 
   gitleaks:

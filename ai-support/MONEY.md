@@ -35,7 +35,7 @@ curl -X POST "$HOST/api/money/ingest" \
       "id": "ev-salary",
       "kind": "income",
       "label": "Lön",
-      "amount": 28000,
+      "amount": 1000,
       "currency": "SEK",
       "category": "work",
       "recurring": true

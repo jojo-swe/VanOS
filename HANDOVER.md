@@ -17,6 +17,7 @@ Projekt: **An autonomous AI company operating system — built to fund #vanlife.
 
 | Agent/vem | Branch | Status | Beskrivning |
 |-----------|--------|--------|-------------|
+| Claude (Claude Code) | `agent/claude/privacy-guard-keywords` | PR öppen (draft), 2026-11-17 | Privacy guard: nyckelord från secreten `PRIVACY_KEYWORDS`, normalisering av secreten, neutralt lönebelopp i `ai-support/MONEY.md` |
 | app/dependabot | `dependabot/npm_and_yarn/ai-support/eslint-10.14.0` | PR #7 öppen, uppdaterad 2026-11-02 | chore(deps): bump eslint from 9.39.3 to 10.14.0 in /ai-support |
 | app/dependabot | `dependabot/npm_and_yarn/ai-support/typescript-7.0.2` | PR #6 öppen, uppdaterad 2026-11-02 | chore(deps): bump typescript from 5.9.3 to 7.0.2 in /ai-support |
 | app/dependabot | `dependabot/npm_and_yarn/ai-support/types/node-26.6.6` | PR #5 öppen, uppdaterad 2026-11-02 | chore(deps): bump @types/node from 20.19.35 to 26.6.6 in /ai-support |
@@ -43,3 +44,4 @@ Projekt: **An autonomous AI company operating system — built to fund #vanlife.
 | Datum | Agent | Vad som gjordes |
 |-------|-------|-----------------|
 | 2026-11-04 | Claude (Cowork) | Lade till AGENTS.md, HANDOVER.md och CLAUDE.md; inventerade PR:er, brancher och commits. |
+| 2026-11-17 | Claude (Claude Code) | Privacy guard: personliga nyckelord läses från secreten `PRIVACY_KEYWORDS` (workflowen skickar den till steget), aldrig från en lista i repot. Secreten normaliseras (CR, tomma rader, avslutande radbrytning) och en ogiltig regex ger ett tydligt fel. Bytte exempellönen i `ai-support/MONEY.md` mot ett neutralt belopp. Verifierat lokalt i sex lägen; `npm test` och build kördes inte, ändringen rör bara bash, workflow och en doc-rad. |
