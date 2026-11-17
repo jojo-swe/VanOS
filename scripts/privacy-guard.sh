@@ -33,6 +33,10 @@ pattern="${PRIVACY_KEYWORDS:-}"
 if [ -z "$pattern" ]; then
   echo "PRIVACY_KEYWORDS is not set: keyword scan skipped."
 else
+  # grep exits 2 on an invalid regex. Fail here instead of letting the suppressed grep below pass every file.
+  rc=0
+  printf '' | grep -E -- "$pattern" >/dev/null 2>&1 || rc=$?
+  if [ "$rc" -eq 2 ]; then echo "::error file=PRIVACY_KEYWORDS::PRIVACY_KEYWORDS is not a valid extended regex"; fail=1; fi
   hits=$(git ls-files -z \
     | grep -zv -E '^(scripts/privacy-guard\.sh|\.github/workflows/privacy-guard\.yml)$' \
     | xargs -0 -r grep -I -n -i -E "$pattern" -- 2>/dev/null | cut -d: -f1,2 || true)
